@@ -40,7 +40,15 @@ function Player:init()
     }
 
     -- initialize all player animations
-
+    self.animations = {
+        ['idle'] = Animation ({
+            frames = self.idle_frames
+        }),
+        ['walking'] = Animation ({
+            frames = self.run_frames
+        })
+        -- TODO: #4 jumping frames and animation
+    }
 
     -- sound effects
     -- TODO

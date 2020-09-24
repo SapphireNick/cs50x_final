@@ -21,6 +21,9 @@ function Player:init()
     self.xOffset = 8
     self.yOffset = 14
 
+    -- reference to map for checking tiles
+    map = sti('Tiled-test-map/test-map.lua')
+
     -- load player sprites into memory
     self.idle_frames = {
         love.graphics.newImage(frames/knight_m_idle_anim_f0.png),

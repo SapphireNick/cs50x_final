@@ -57,7 +57,7 @@ function love.draw()
 
     push:apply('start')
 
-    love.graphics.clear(1, 1, 1, 1)
+    love.graphics.clear(0, 0, 0, 1)
 
     -- load map with sti library
     map:draw()

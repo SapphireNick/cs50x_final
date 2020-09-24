@@ -1,6 +1,7 @@
 -- import libraries
 Class = require 'class'
 push = require 'push'
+sti = require 'sti'
 
 -- import classes
 
@@ -32,6 +33,9 @@ function love.load()
     -- set title of window
     love.window.setTitle('Dungeon Crawler 50')
 
+    -- load map
+    map = sti('Tiled-test-map/test-map.lua')
+
 end
 
 function love.resize(w, h)
@@ -39,7 +43,7 @@ function love.resize(w, h)
 end
 
 function love.update(dt)
-
+    map:update(dt)
 end
 
 function love.draw()
@@ -47,6 +51,8 @@ function love.draw()
     push:apply('start')
 
     love.graphics.clear(1, 1, 1, 1)
+
+    map:draw()
 
     push:apply('end')
 

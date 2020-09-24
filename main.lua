@@ -8,6 +8,7 @@ sti = require 'sti'
 
 -- import classes
 
+require 'Animation'
 require 'Player'
 
 -- CONSTANTS

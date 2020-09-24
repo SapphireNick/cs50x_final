@@ -39,6 +39,9 @@ function Player:init()
         love.graphics.newImage(frames/knight_m_run_anim_f3.png)
     }
 
+    -- initialize all player animations
+
+
     -- sound effects
     -- TODO
 

@@ -3,7 +3,6 @@ Player = Class{}
 -- local variables
 
 local WALKING_SPEED = 140
-local JUMP_VELOCITY = 400
 
 function Player:init()
 
@@ -21,8 +20,8 @@ function Player:init()
     self.xOffset = 8
     self.yOffset = 14
 
-    -- reference to map for checking tiles
-    map = sti('Tiled-test-map/test-map.lua')
+    -- player position in level
+    -- TODO
 
     -- load player sprites into memory
     self.idle_frames = {
@@ -50,9 +49,6 @@ function Player:init()
     }
 
     -- sound effects
-    -- TODO
-
-    -- reference to map
     -- TODO
 
     -- state to determine which animation to play

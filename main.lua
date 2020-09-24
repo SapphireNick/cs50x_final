@@ -2,12 +2,9 @@
 Class = require 'class'
 push = require 'push'
 
--- library by karai17 ( github.com/karai17/Simple-Tiled-Implementation )
--- used to import maps made with Tiled map editor
-sti = require 'sti'
-
 -- import classes
 
+require 'Map'
 require 'Animation'
 require 'Player'
 
@@ -37,8 +34,7 @@ function love.load()
     -- set title of window
     love.window.setTitle('Dungeon Crawler 50')
 
-    -- load map with sti library
-    map = sti('Tiled-test-map/test-map.lua')
+    map = Map()
 
 end
 
@@ -48,9 +44,6 @@ end
 
 function love.update(dt)
 
-    -- update map with sti library
-    map:update(dt)
-
 end
 
 function love.draw()
@@ -59,8 +52,7 @@ function love.draw()
 
     love.graphics.clear(0, 0, 0, 1)
 
-    -- load map with sti library
-    map:draw()
+    map:render()
 
     push:apply('end')
 

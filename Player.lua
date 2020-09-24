@@ -47,7 +47,6 @@ function Player:init()
         ['walking'] = Animation ({
             frames = self.run_frames
         })
-        -- TODO: #4 jumping frames and animation
     }
 
     -- sound effects

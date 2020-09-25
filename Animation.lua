@@ -6,7 +6,7 @@ function Animation:init(params)
     self.frames = params.frames
 
     -- time in seconds each frame takes ( default 1/20s )
-    self.interval = params.interval or 0.05
+    self.interval = params.interval or 0.1
 
     self.timer = 0
 
@@ -20,7 +20,7 @@ end
 
 function Animation:restart()
     self.timer = 0
-    self.currentFrame = 0
+    self.currentFrame = 1
 end
 
 function Animation:update(dt)

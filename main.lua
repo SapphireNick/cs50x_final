@@ -24,6 +24,8 @@ VIRTUAL_HEIGHT = 243
 
 love.graphics.setDefaultFilter('nearest', 'nearest')
 
+map = Map()
+
 function love.load()
     
     -- set up virtual screen resolution
@@ -35,12 +37,16 @@ function love.load()
     -- set title of window
     love.window.setTitle('Dungeon Crawler 50')
 
-    map = Map()
-
 end
 
 function love.resize(w, h)
     push:resize(w, h)
+end
+
+function love.keypressed(key)
+    if key == 'escape' then
+        love.event.quit()
+    end
 end
 
 function love.update(dt)

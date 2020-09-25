@@ -2,9 +2,9 @@ Player = Class{}
 
 -- local variables
 
-local WALKING_SPEED = 140
+local WALKING_SPEED = 100
 
-function Player:init()
+function Player:init(map)
 
     self.x = 0
     self.y = 0
@@ -21,7 +21,9 @@ function Player:init()
     self.yOffset = 14
 
     -- player position in level
-    -- TODO
+    self.map = map
+    self.x = map.tileWidth * 2
+    self.y = map.tileHeight * 2
 
     -- load player sprites into memory
     self.idle_frames = {
@@ -99,6 +101,12 @@ function Player:init()
                 self.animations['idle']:restart()
                 self.animation = self.animations['idle']
             end
+
+            self:checkLeftCollision()
+            self:checkRightCollision()
+            self:checkTopCollision()
+            self:checkBottomCollision()
+
         end
     }
 
@@ -110,6 +118,44 @@ function Player:init()
 
     -- determines sprite flipping
     self.direction = 'right'
+end
+
+function Player:checkLeftCollision()
+    if self.dx < 0 then
+        if self.map:collides(self.map:tileAt(1, self.x - 1, self.y)) then
+            self.dx = 0
+            self.x = self.map:tileAt(1, self.x - 1, self.y).x * self.map.tileWidth
+        end
+    end
+end
+
+function Player:checkRightCollision()
+    if self.dx > 0 then
+        if self.map:collides(self.map:tileAt(1, self.x + self.width , self.y)) then
+            self.dx = 0
+            self.x = (self.map:tileAt(1, self.x + self.width, self.y).x - 1) * self.map.tileWidth - self.width
+        end
+    end
+end
+
+function Player:checkTopCollision()
+    if self.dy < 0 then
+        if self.map:collides(self.map:tileAt(1, self.x, self.y - 1)) then
+            self.dy = 0
+            self.y = self.map:tileAt(1, self.x, self.y - 1).y * self.map.tileHeight
+        end
+    end
+end
+
+-- TODO #11 : Bug if hugging right wall and walking straight down
+
+function Player:checkBottomCollision()
+    if self.dy > 0 then
+        if self.map:collides(self.map:tileAt(1, self.x, self.y + self.height)) then
+            self.dy = 0
+            self.y = (self.map:tileAt(1, self.x, self.y + self.height).y - 1) * self.map.tileHeight - self.height
+        end
+    end
 end
 
 function Player:update(dt)

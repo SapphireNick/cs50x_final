@@ -13,6 +13,8 @@ function Map:init()
     self.spritesheet = love.graphics.newImage("Tiled-test-map/0x72_DungeonTilesetII_v1.3.1/0x72_DungeonTilesetII_v1.3.png")
     self.quads = generateQuads(self.spritesheet, self.tileWidth, self.tileHeight)
 
+    self.player = Player()
+
 end
 
 -- get tile id from layer at pos x and y in tiles
@@ -20,11 +22,17 @@ function Map:getTile(layer, x, y)
     return self.map.layers[layer].data[(y - 1) * self.mapWidth + x]
 end
 
+function Map:update(dt)
+
+    self.player:update(dt)
+
+end
+
 function Map:render()
 
     id = self:getTile(1, 2, 2)
 
-    for i = 1, 1 do
+    for i = 1, #self.map['layers'] do
        for y = 1, self.mapHeight do
             for x = 1, self.mapWidth do
 
@@ -40,5 +48,7 @@ function Map:render()
             end
         end
     end
+
+    self.player:render()
 
 end

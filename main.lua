@@ -15,9 +15,10 @@ WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
 -- downscaled resolution
-
-VIRUTAL_WIDTH = 640
-VIRTUAL_HEIGHT = 360
+VIRUTAL_WIDTH = 432
+VIRTUAL_HEIGHT = 243
+-- VIRUTAL_WIDTH = 640
+-- VIRTUAL_HEIGHT = 360
 
 -- make upscaling look pixel-ish and not blurry
 
@@ -43,6 +44,8 @@ function love.resize(w, h)
 end
 
 function love.update(dt)
+
+    map:update(dt)
 
 end
 

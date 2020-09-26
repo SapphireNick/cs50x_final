@@ -7,6 +7,7 @@ push = require 'push'
 require 'Map'
 require 'Animation'
 require 'Player'
+require 'Demon'
 
 -- CONSTANTS
 -- actual window resolution

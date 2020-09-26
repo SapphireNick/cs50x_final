@@ -14,6 +14,8 @@ function Map:init()
     self.quads = generateQuads(self.spritesheet, self.tileWidth, self.tileHeight)
 
     self.player = Player(self)
+    self.big_demon_1 = Demon('big', self)
+    self.small_demon_1 = Demon('small', self)
 
 end
 
@@ -50,6 +52,8 @@ end
 function Map:update(dt)
 
     self.player:update(dt)
+    self.big_demon_1:update(dt)
+    self.small_demon_1:update(dt)
 
 end
 
@@ -75,5 +79,7 @@ function Map:render()
     end
 
     self.player:render()
+    self.big_demon_1:render()
+    self.small_demon_1:render()
 
 end

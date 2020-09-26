@@ -54,9 +54,39 @@ function Player:init(map)
     self.animation = self.animations['idle']
     self.currentFrame = self.animation:getCurrentFrame()
 
+    -- 8 directional movement is weird but works somehow as intended 
+
     self.behaviours = {
         ['idle'] = function(dt)
-            if love.keyboard.isDown('a') then
+            if love.keyboard.isDown('a') and love.keyboard.isDown('w') then
+                self.direction = 'left'
+                self.state = 'walking'
+                self.dx = -WALKING_SPEED
+                self.dy = -WALKING_SPEED
+                self.animations['walking']:restart()
+                self.animation = self.animations['walking']
+            elseif love.keyboard.isDown('a') and love.keyboard.isDown('s') then
+                self.direction = 'left'
+                self.state = 'walking'
+                self.dx = -WALKING_SPEED
+                self.dy = WALKING_SPEED
+                self.animations['walking']:restart()
+                self.animation = self.animations['walking']
+            elseif love.keyboard.isDown('d') and love.keyboard.isDown('w') then
+                self.direction = 'right'
+                self.state = 'walking'
+                self.dx = WALKING_SPEED
+                self.dy = -WALKING_SPEED
+                self.animations['walking']:restart()
+                self.animation = self.animations['walking']
+            elseif love.keyboard.isDown('d') and love.keyboard.isDown('s') then
+                self.direction = 'right'
+                self.state = 'walking'
+                self.dy = WALKING_SPEED
+                self.dx = WALKING_SPEED
+                self.animations['walking']:restart()
+                self.animation = self.animations['walking']
+            elseif love.keyboard.isDown('a') then
                 self.direction = 'left'
                 self.state = 'walking'
                 self.dx = -WALKING_SPEED
@@ -84,7 +114,23 @@ function Player:init(map)
             end
         end,
         ['walking'] = function(dt)
-            if love.keyboard.isDown('a') then
+            if love.keyboard.isDown('a') and love.keyboard.isDown('w') then
+                self.direction = 'left'
+                self.dx = -WALKING_SPEED
+                self.dy = -WALKING_SPEED
+            elseif love.keyboard.isDown('a') and love.keyboard.isDown('s') then
+                self.direction = 'left'
+                self.dx = -WALKING_SPEED
+                self.dy = WALKING_SPEED
+            elseif love.keyboard.isDown('d') and love.keyboard.isDown('w') then
+                self.direction = 'right'
+                self.dx = WALKING_SPEED
+                self.dy = -WALKING_SPEED
+            elseif love.keyboard.isDown('d') and love.keyboard.isDown('s') then
+                self.direction = 'right'
+                self.dy = WALKING_SPEED
+                self.dx = WALKING_SPEED
+            elseif love.keyboard.isDown('a') then
                 self.direction = 'left'
                 self.dx = -WALKING_SPEED
             elseif love.keyboard.isDown('d') then

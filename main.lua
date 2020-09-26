@@ -62,6 +62,7 @@ function love.draw()
 
     love.graphics.clear(0, 0, 0, 1)
 
+    love.graphics.translate(math.floor(-map.camx + 0.5), math.floor(-map.camy + 0.5))
     map:render()
 
     push:apply('end')

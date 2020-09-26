@@ -1,8 +1,16 @@
 Demon = Class{}
 
-function Demon:init(type, map)
+-- TODO #16 Diffrent velocity values for big and small demons
+
+ENEMY_SPEED = 60
+
+function Demon:init(type, map, player)
 
     self.type = type
+
+    self.map = map
+
+    self.player = player
 
     self.x = 0
     self.y = 0
@@ -101,6 +109,19 @@ function Demon:update(dt)
     self.animation:update(dt)
     self.currentFrame = self.animation:getCurrentFrame()
 
+    -- function to calculate angle and velocity values for demons to follow player
+    -- source: https://love2d.org/forums/viewtopic.php?t=33065
+
+    self.dx = self.player.x - self.x
+    self.dy = self.player.y - self.y
+
+    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+
+    if distance < 75 then
+        self.x = self.x + (self.dx / distance * ENEMY_SPEED * dt)
+        self.y = self.y + (self.dy / distance * ENEMY_SPEED * dt)
+    end
+
 end
 
 function Demon:render()
@@ -114,15 +135,9 @@ function Demon:render()
     end
 
     if self.type == 'big' then
-        --temp
-        self.x = 16
-        self.y = 16
         love.graphics.draw(self.currentFrame, math.floor(self.x + self.big_xoffset),
                 math.floor(self.y + self.big_yOffset), 0, scaleX, 1, self.big_xoffset, self.big_yOffset)
     elseif self.type == 'small' then
-        --temp
-        self.x = 3 * 16
-        self.y = 3 * 16
         love.graphics.draw(self.currentFrame, math.floor(self.x + self.small_xOffset),
                 math.floor(self.y + self.small_yOffset), 0, scaleX, 1, self.small_xOffset, self.small_yOffset)
     end

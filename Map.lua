@@ -17,8 +17,8 @@ function Map:init()
     self.camy = -3
 
     self.player = Player(self)
-    self.big_demon_1 = Demon('big', self)
-    self.small_demon_1 = Demon('small', self)
+    self.big_demon_1 = Demon('big', self, self.player)
+    self.small_demon_1 = Demon('small', self, self.player)
 
 end
 

@@ -5,13 +5,16 @@ Map = Class{}
 function Map:init()
 
     -- call map into memory | the importet lua just returns a table
-    self.map = require("Tiled-test-map/test-map")
+    self.map = require("Test-lv/test_lv")
     self.mapHeight = self.map.height
     self.mapWidth = self.map.width
     self.tileHeight = self.map.tileheight
     self.tileWidth = self.map.tilewidth
-    self.spritesheet = love.graphics.newImage("Tiled-test-map/0x72_DungeonTilesetII_v1.3.1/0x72_DungeonTilesetII_v1.3.png")
+    self.spritesheet = love.graphics.newImage("Test-lv/0x72_DungeonTilesetII_v1.3.1/0x72_DungeonTilesetII_v1.3.png")
     self.quads = generateQuads(self.spritesheet, self.tileWidth, self.tileHeight)
+
+    self.camx = 0
+    self.camy = -3
 
     self.player = Player(self)
     self.big_demon_1 = Demon('big', self)
@@ -36,7 +39,7 @@ function Map:collides(tile)
 
     -- fedine collidable tiles
     local collidables = {
-        36
+        34
     }
 
     for _, v in ipairs(collidables) do
@@ -55,6 +58,12 @@ function Map:update(dt)
     self.big_demon_1:update(dt)
     self.small_demon_1:update(dt)
 
+    self.camx = math.max(0, math.min(self.player.x - 432 / 2,
+            math.min(self.mapWidth * self.tileWidth - 432, self.player.x)))
+
+    self.camy = math.max(0, math.min(self.player.y - 243 / 2 + self.player.height,
+            math.min(self.mapHeight * self.tileHeight - 243, self.player.y)))
+
 end
 
 function Map:render()
@@ -67,12 +76,14 @@ function Map:render()
 
                 local tile = self:getTile(i, x, y)
 
-                love.graphics.draw(
-                    self.spritesheet,
-                    self.quads[tile],
-                    (x - 1) * self.tileWidth,
-                    (y - 1) * self.tileHeight
-                )
+                if tile ~= 0 then
+                    love.graphics.draw(
+                        self.spritesheet,
+                        self.quads[tile],
+                        (x - 1) * self.tileWidth,
+                        (y - 1) * self.tileHeight
+                    )
+                end
 
             end
         end

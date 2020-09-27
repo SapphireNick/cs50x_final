@@ -171,8 +171,6 @@ function Player:checkTopCollision()
     end
 end
 
--- TODO #11 : Bug if hugging right wall and walking straight down
-
 function Player:checkBottomCollision()
     if self.dy > 0 then
         if self.map:collides(self.map:tileAt(1, self.x, self.y + self.height)) then

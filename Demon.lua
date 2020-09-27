@@ -1,14 +1,17 @@
 Demon = Class{}
 
--- TODO #16 Diffrent velocity values for big and small demons
-
-ENEMY_SPEED = 60
+ENEMY_SPEED_BIG = 40
+ENEMY_SPEED_SMALL = 60
 
 function Demon:init(type, map, player)
 
     self.type = type
 
+    -- associate self with map
+
     self.map = map
+
+    -- associate self with player
 
     self.player = player
 
@@ -75,7 +78,8 @@ function Demon:init(type, map, player)
             interval = 0.25
         }),
         ['walking'] = Animation ({
-            frames = self.big_run_frames
+            frames = self.big_run_frames,
+            interval = 0.2
         })
     }
 
@@ -87,7 +91,8 @@ function Demon:init(type, map, player)
             interval = 0.25
         }),
         ['walking'] = Animation ({
-            frames = self.small_run_frames
+            frames = self.small_run_frames,
+            interval = 0.2
         })
     }
 
@@ -99,28 +104,201 @@ function Demon:init(type, map, player)
         self.currentFrame = self.animation:getCurrentFrame()
     end
 
+    -- define behaviour table dependend on the type
+
+    if self.type == 'big' then
+
+        self.behaviours = {
+                ['idle'] = function(dt)
+
+                    -- function to calculate angle and velocity values for demons to follow player
+                    -- source: https://love2d.org/forums/viewtopic.php?t=33065
+
+                    self.dx = self.player.x - self.x
+                    self.dy = self.player.y - self.y
+
+                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+
+                    if distance < 100 then
+                        if self.dx < 0 then
+                            self.direction = 'left'
+                        elseif self.dx > 0 then
+                            self.direction = 'right'
+                        end
+                        self.state = 'walking'
+                        self.big_animations['walking']:restart()
+                        self.animation = self.big_animations['walking']
+                        self.x = self.x + (self.dx / distance * ENEMY_SPEED_BIG * dt)
+                        self.y = self.y + (self.dy / distance * ENEMY_SPEED_BIG * dt)
+                    end
+
+                    self:checkLeftCollision()
+                    self:checkRightCollision()
+                    self:checkTopCollision()
+                    self:checkBottomCollision()
+
+                end,
+                ['walking'] = function(dt)
+
+                    -- function to calculate angle and velocity values for demons to follow player
+                    -- source: https://love2d.org/forums/viewtopic.php?t=33065
+
+                    self.dx = self.player.x - self.x
+                    self.dy = self.player.y - self.y
+
+                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+
+                    if distance < 100 then
+                        if self.dx < 0 then
+                            self.direction = 'left'
+                        elseif self.dx > 0 then
+                            self.direction = 'right'
+                        end
+                        self.x = self.x + (self.dx / distance * ENEMY_SPEED_BIG * dt)
+                        self.y = self.y + (self.dy / distance * ENEMY_SPEED_BIG * dt)
+                    else
+                        self.state = 'idle'
+                        self.big_animations['idle']:restart()
+                        self.animation = self.big_animations['idle']
+                    end
+
+                    self:checkLeftCollision()
+                    self:checkRightCollision()
+                    self:checkTopCollision()
+                    self:checkBottomCollision()
+
+                end
+        }
+    end
+
+    if self.type == 'small' then
+
+        self.behaviours = {
+                ['idle'] = function(dt)
+
+                    -- function to calculate angle and velocity values for demons to follow player
+                    -- source: https://love2d.org/forums/viewtopic.php?t=33065
+
+                    self.dx = self.player.x - self.x
+                    self.dy = self.player.y - self.y
+
+                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+
+                    if distance < 75 then
+                        if self.dx < 0 then
+                            self.direction = 'left'
+                        elseif self.dx > 0 then
+                            self.direction = 'right'
+                        end
+                        self.state = 'walking'
+                        self.small_animations['walking']:restart()
+                        self.animation = self.small_animations['walking']
+                        self.x = self.x + (self.dx / distance * ENEMY_SPEED_SMALL * dt)
+                        self.y = self.y + (self.dy / distance * ENEMY_SPEED_SMALL * dt)
+                    end
+
+                    self:checkLeftCollision()
+                    self:checkRightCollision()
+                    self:checkTopCollision()
+                    self:checkBottomCollision()
+
+                end,
+                ['walking'] = function(dt)
+
+                    -- function to calculate angle and velocity values for demons to follow player
+                    -- source: https://love2d.org/forums/viewtopic.php?t=33065
+
+                    self.dx = self.player.x - self.x
+                    self.dy = self.player.y - self.y
+
+                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+
+                    if distance < 75 then
+                        if self.dx < 0 then
+                            self.direction = 'left'
+                        elseif self.dx > 0 then
+                            self.direction = 'right'
+                        end
+                        self.x = self.x + (self.dx / distance * ENEMY_SPEED_SMALL * dt)
+                        self.y = self.y + (self.dy / distance * ENEMY_SPEED_SMALL * dt)
+                    else
+                        self.state = 'idle'
+                        self.small_animations['idle']:restart()
+                        self.animation = self.small_animations['idle']
+                    end
+
+                    self:checkLeftCollision()
+                    self:checkRightCollision()
+                    self:checkTopCollision()
+                    self:checkBottomCollision()
+
+                end
+        }
+    end
+
     self.state = 'idle'
     self.direction = 'right'
 
 end
 
+-- helper functions to check for collision
+
+function Demon:checkLeftCollision()
+    if self.dx < 0 then
+        if self.map:collides(self.map:tileAt(1, self.x - 1, self.y)) then
+            self.dx = 0
+            self.x = self.map:tileAt(1, self.x - 1, self.y).x * self.map.tileWidth
+        end
+    end
+end
+
+function Demon:checkRightCollision()
+    if self.dx > 0 then
+        if type == 'big' then
+            if self.map:collides(self.map:tileAt(1, self.x + self.big_width , self.y)) then
+                self.dx = 0
+                self.x = (self.map:tileAt(1, self.x + self.big_width, self.y).x - 1) * self.map.tileWidth - self.big_width
+            end
+        else
+            if self.map:collides(self.map:tileAt(1, self.x + self.small_width , self.y)) then
+                self.dx = 0
+                self.x = (self.map:tileAt(1, self.x + self.small_width, self.y).x - 1) * self.map.tileWidth - self.small_width
+            end
+        end
+    end
+end
+
+function Demon:checkTopCollision()
+    if self.dy < 0 then
+        if self.map:collides(self.map:tileAt(1, self.x, self.y - 1)) then
+            self.dy = 0
+            self.y = self.map:tileAt(1, self.x, self.y - 1).y * self.map.tileHeight
+        end
+    end
+end
+
+function Demon:checkBottomCollision()
+    if self.dy > 0 then
+        if type == 'big' then
+            if self.map:collides(self.map:tileAt(1, self.x, self.y + self.big_height)) then
+                self.dy = 0
+                self.y = (self.map:tileAt(1, self.x, self.y + self.big_height).y - 1) * self.map.tileHeight - self.big_height
+            end
+        else
+            if self.map:collides(self.map:tileAt(1, self.x, self.y + self.small_height)) then
+                self.dy = 0
+                self.y = (self.map:tileAt(1, self.x, self.y + self.small_height).y - 1) * self.map.tileHeight - self.small_height
+            end
+        end
+    end
+end
+
+
 function Demon:update(dt)
 
+    self.behaviours[self.state](dt)
     self.animation:update(dt)
     self.currentFrame = self.animation:getCurrentFrame()
-
-    -- function to calculate angle and velocity values for demons to follow player
-    -- source: https://love2d.org/forums/viewtopic.php?t=33065
-
-    self.dx = self.player.x - self.x
-    self.dy = self.player.y - self.y
-
-    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
-
-    if distance < 75 then
-        self.x = self.x + (self.dx / distance * ENEMY_SPEED * dt)
-        self.y = self.y + (self.dy / distance * ENEMY_SPEED * dt)
-    end
 
 end
 

@@ -11,7 +11,7 @@ function Player:init(map)
     self.width = 16
     self.height= 28
     self.max_health = 5
-    self.current_health = 5
+    self.current_health = 3
 
     -- variables for velocity
 
@@ -27,8 +27,8 @@ function Player:init(map)
     -- player position in level
 
     self.map = map
-    self.x = map.tileWidth * 2
-    self.y = map.tileHeight * 2
+    self.x = map.tileWidth * 4
+    self.y = map.tileHeight * 4
 
     -- load player sprites into memory
 
@@ -198,6 +198,16 @@ function Player:update(dt)
     self.behaviours[self.state](dt)
     self.animation:update(dt)
     self.currentFrame = self.animation:getCurrentFrame()
+
+    -- check current health and check if on top of potion/pickup
+    -- set tile to 0 when picked up
+
+    if self.current_health < 5 then
+        if self.map:check_pickups(self.map:tileAt(2, self.x, self.y)) then
+            self.map:setTile(2, self.map:tileAt(2, self.x, self.y).x, self.map:tileAt(2, self.x, self.y).y, 0)
+            self.current_health = self.current_health + 1
+        end
+    end
 
     self.x = self.x + self.dx * dt
     self.y = self.y + self.dy * dt

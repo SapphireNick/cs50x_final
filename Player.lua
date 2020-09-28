@@ -155,6 +155,8 @@ function Player:init(map)
 
     self.direction = 'right'
 
+    self.timer = 1
+
 end
 
 function Player:checkLeftCollision()
@@ -199,6 +201,8 @@ function Player:update(dt)
     self.animation:update(dt)
     self.currentFrame = self.animation:getCurrentFrame()
 
+    self.timer = self.timer + dt
+
     -- check current health and check if on top of potion/pickup
     -- set tile to 0 when picked up
 
@@ -206,6 +210,13 @@ function Player:update(dt)
         if self.map:check_pickups(self.map:tileAt(2, self.x, self.y)) then
             self.map:setTile(2, self.map:tileAt(2, self.x, self.y).x, self.map:tileAt(2, self.x, self.y).y, 0)
             self.current_health = self.current_health + 1
+        end
+    end
+
+    if self.timer > 1 then
+        if self.map:check_spike(self.map:tileAt(2, self.x, self.y)) then
+            self.timer = 0
+            self.current_health = self.current_health - 1
         end
     end
 
@@ -234,5 +245,7 @@ function Player:render()
 
     love.graphics.draw(self.currentFrame, math.floor(self.x + self.xOffset),
             math.floor(self.y + self.yOffset), 0, scaleX, 1, self.xOffset, self.yOffset)
+
+    love.graphics.printf(tostring(self.timer), self.map.camx + 5, self.map.camy + 30, 432, 'center')
 
 end

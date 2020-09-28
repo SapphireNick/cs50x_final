@@ -48,7 +48,7 @@ function Map:collides(tile)
     -- define collidable tiles
     local collidables = {
         33, 34, 35,
-        165, 197, 229
+        167, 198, 230
     }
 
     for _, v in ipairs(collidables) do
@@ -82,7 +82,7 @@ function Map:check_spike(tile)
 
     --  define spike/hurtable tiles id's
     local hurtable_tiles = {
-        356
+        357
     }
 
     for _, v in ipairs(hurtable_tiles) do

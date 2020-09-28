@@ -18,6 +18,9 @@ function Demon:init(type, map, player)
     self.x = 0
     self.y = 0
 
+    self.big_health = 5
+    self.small_healt = 3
+
     -- height and width for either small or big demon
     -- type argument will decide which demon to spawn
 

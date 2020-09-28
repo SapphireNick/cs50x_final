@@ -10,22 +10,31 @@ function Player:init(map)
     self.y = 0
     self.width = 16
     self.height= 28
+    self.max_health = 5
+    self.current_health = 5
 
     -- variables for velocity
+
     self.dx = 0
     self.dy = 0
 
     -- offset from top left for sprite flipping
     -- just self.width and self.height divided by 2 repectively
+
     self.xOffset = 8
     self.yOffset = 14
 
     -- player position in level
+
     self.map = map
     self.x = map.tileWidth * 2
     self.y = map.tileHeight * 2
 
     -- load player sprites into memory
+
+    self.full_heart_sprite = love.graphics.newImage('frames/ui_heart_full.png')
+    self.empty_heart_sprite = love.graphics.newImage('frames/ui_heart_empty.png')
+
     self.idle_frames = {
         love.graphics.newImage('frames/knight_m_idle_anim_f0.png'),
         love.graphics.newImage('frames/knight_m_idle_anim_f1.png'),
@@ -41,6 +50,7 @@ function Player:init(map)
     }
 
     -- initialize all player animations
+
     self.animations = {
         ['idle'] = Animation ({
             frames = self.idle_frames,
@@ -138,10 +148,13 @@ function Player:init(map)
     -- TODO
 
     -- state to determine which animation to play
+
     self.state = 'idle'
 
     -- determines sprite flipping
+
     self.direction = 'right'
+
 end
 
 function Player:checkLeftCollision()
@@ -199,6 +212,14 @@ function Player:render()
         scaleX = 1
     else
         scaleX = -1
+    end
+
+    for x = 1, self.max_health do
+        if x <= self.current_health then
+            love.graphics.draw(self.full_heart_sprite, self.map.camx + (x - 1) * 16 + 5, self.map.camy + 5)
+        else
+            love.graphics.draw(self.empty_heart_sprite, self.map.camx + (x - 1) * 16 + 5, self.map.camy + 5)
+        end
     end
 
     love.graphics.draw(self.currentFrame, math.floor(self.x + self.xOffset),

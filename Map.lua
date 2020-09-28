@@ -125,28 +125,10 @@ function Map:render()
                         (y - 1) * self.tileHeight
                     )
                 end
+
             end
         end
     end
-
-    -- for i = 1, #self.map['layers'] do
-    --    for y = 1, self.mapHeight do
-    --         for x = 1, self.mapWidth do
-
-    --             local tile = self:getTile(i, x, y)
-
-    --             if tile ~= 0 then
-    --                 love.graphics.draw(
-    --                     self.spritesheet,
-    --                     self.quads[tile],
-    --                     (x - 1) * self.tileWidth,
-    --                     (y - 1) * self.tileHeight
-    --                 )
-    --             end
-
-    --         end
-    --     end
-    -- end
 
     self.player:render()
 

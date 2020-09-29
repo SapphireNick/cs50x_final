@@ -38,6 +38,8 @@ function love.load()
     -- set title of window
     love.window.setTitle('Dungeon Crawler 50')
 
+    map:load_enemies()
+
 end
 
 function love.resize(w, h)

@@ -6,12 +6,10 @@ local WALKING_SPEED = 100
 
 function Player:init(map)
 
-    self.x = 0
-    self.y = 0
     self.width = 16
     self.height= 28
     self.max_health = 5
-    self.current_health = 3
+    self.current_health = 5
 
     -- variables for velocity
 
@@ -27,8 +25,8 @@ function Player:init(map)
     -- player position in level
 
     self.map = map
-    self.x = map.tileWidth * 4
-    self.y = map.tileHeight * 4
+    self.x = map.tileWidth * 38
+    self.y = map.tileHeight * 45
 
     -- load player sprites into memory
 
@@ -213,8 +211,11 @@ function Player:update(dt)
         end
     end
 
+    -- check if timer is above 1 ( for invincibility frames ) and
+    -- check if player is standing on spikes
+
     if self.timer > 1 then
-        if self.map:check_spike(self.map:tileAt(2, self.x, self.y)) then
+        if self.map:check_spike(self.map:tileAt(2, self.x + self.xOffset, self.y + self.yOffset)) then
             self.timer = 0
             self.current_health = self.current_health - 1
         end
@@ -245,7 +246,5 @@ function Player:render()
 
     love.graphics.draw(self.currentFrame, math.floor(self.x + self.xOffset),
             math.floor(self.y + self.yOffset), 0, scaleX, 1, self.xOffset, self.yOffset)
-
-    love.graphics.printf(tostring(self.timer), self.map.camx + 5, self.map.camy + 30, 432, 'center')
 
 end

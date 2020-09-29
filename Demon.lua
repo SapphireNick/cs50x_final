@@ -3,7 +3,7 @@ Demon = Class{}
 ENEMY_SPEED_BIG = 40
 ENEMY_SPEED_SMALL = 60
 
-function Demon:init(type, map, player)
+function Demon:init(type, map, player, posx, posy)
 
     self.type = type
 
@@ -15,8 +15,8 @@ function Demon:init(type, map, player)
 
     self.player = player
 
-    self.x = 0
-    self.y = 0
+    self.x = posx * self.map.tileWidth
+    self.y = posy * self.map.tileHeight
 
     self.big_health = 5
     self.small_health = 3
@@ -73,6 +73,34 @@ function Demon:init(type, map, player)
         love.graphics.newImage('frames/chort_run_anim_f3.png')
     }
 
+    self.big_zombie_idle_frames = {
+        love.graphics.newImage('frames/big_zombie_idle_anim_f0.png'),
+        love.graphics.newImage('frames/big_zombie_idle_anim_f1.png'),
+        love.graphics.newImage('frames/big_zombie_idle_anim_f2.png'),
+        love.graphics.newImage('frames/big_zombie_idle_anim_f3.png')
+    }
+
+    self.big_zombie_run_frames = {
+        love.graphics.newImage('frames/big_zombie_run_anim_f0.png'),
+        love.graphics.newImage('frames/big_zombie_run_anim_f1.png'),
+        love.graphics.newImage('frames/big_zombie_run_anim_f2.png'),
+        love.graphics.newImage('frames/big_zombie_run_anim_f3.png')
+    }
+
+    self.small_zombie_idle_frames = {
+        love.graphics.newImage('frames/orc_warrior_idle_anim_f0.png'),
+        love.graphics.newImage('frames/orc_warrior_idle_anim_f1.png'),
+        love.graphics.newImage('frames/orc_warrior_idle_anim_f2.png'),
+        love.graphics.newImage('frames/orc_warrior_idle_anim_f3.png')
+    }
+
+    self.small_zombie_run_frames = {
+        love.graphics.newImage('frames/orc_warrior_run_anim_f0.png'),
+        love.graphics.newImage('frames/orc_warrior_run_anim_f1.png'),
+        love.graphics.newImage('frames/orc_warrior_run_anim_f2.png'),
+        love.graphics.newImage('frames/orc_warrior_run_anim_f3.png')
+    }
+
     -- initialize animations for big demon
 
     self.big_animations = {
@@ -95,6 +123,28 @@ function Demon:init(type, map, player)
         }),
         ['walking'] = Animation ({
             frames = self.small_run_frames,
+            interval = 0.2
+        })
+    }
+
+    self.big_zombie_animations = {
+        ['idle'] = Animation ({
+            frames = self.big_zombie_idle_frames,
+            interval = 0.25
+        }),
+        ['walking'] = Animation ({
+            frames = self.big_zombie_run_frames,
+            interval = 0.2
+        })
+    }
+
+    self.small_zombie_animations = {
+        ['idle'] = Animation ({
+            frames = self.small_zombie_idle_frames,
+            interval = 0.25
+        }),
+        ['walking'] = Animation ({
+            frames = self.small_zombie_run_frames,
             interval = 0.2
         })
     }
@@ -238,6 +288,8 @@ function Demon:init(type, map, player)
                 end
         }
     end
+
+    -- TODO #22 Add Zombie behaviour table
 
     self.state = 'idle'
     self.direction = 'right'

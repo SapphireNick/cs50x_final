@@ -42,6 +42,76 @@ function Map:setTile(layer, x, y, tile_id)
     self.data[layer][(y - 1) * self.mapWidth + x] = tile_id
 end
 
+-- loads all demons in the right places
+
+function Map:load_enemies()
+
+    self.sd1 = Demon('small', self, self.player, 25, 34)
+    self.sd2 = Demon('small', self, self.player, 25, 26)
+    self.sd3 = Demon('small', self, self.player, 2, 26)
+    self.sd4 = Demon('small', self, self.player, 51, 25)
+    self.sd5 = Demon('small', self, self.player, 59, 2)
+    self.sd6 = Demon('small', self, self.player, 59, 30)
+    self.sd7 = Demon('small', self, self.player, 93, 33)
+    self.sd8 = Demon('small', self, self.player, 51, 47)
+    self.sd9 = Demon('small', self, self.player, 59, 38)
+    self.sd10 = Demon('small', self, self.player, 64, 38)
+    self.sd11 = Demon('small', self, self.player, 94, 47)
+    self.sd12 = Demon('small', self, self.player, 87, 15)
+    self.sd13 = Demon('small', self, self.player, 90, 13)
+
+    self.bd1 = Demon('big', self, self.player, 6, 43)
+    self.bd2 = Demon('big', self, self.player, 14, 2)
+    self.bd3 = Demon('big', self, self.player, 56, 28)
+    self.bd4 = Demon('big', self, self.player, 87, 10)
+
+end
+
+function Map:update_enemies(dt)
+
+    self.sd1:update(dt)
+    self.sd2:update(dt)
+    self.sd3:update(dt)
+    self.sd4:update(dt)
+    self.sd5:update(dt)
+    self.sd6:update(dt)
+    self.sd7:update(dt)
+    self.sd8:update(dt)
+    self.sd9:update(dt)
+    self.sd10:update(dt)
+    self.sd11:update(dt)
+    self.sd12:update(dt)
+    self.sd13:update(dt)
+
+    self.bd1:update(dt)
+    self.bd2:update(dt)
+    self.bd3:update(dt)
+    self.bd4:update(dt)
+
+end
+
+function Map:render_enemies()
+
+    self.sd1:render()
+    self.sd2:render()
+    self.sd3:render()
+    self.sd4:render()
+    self.sd5:render()
+    self.sd6:render()
+    self.sd7:render()
+    self.sd8:render()
+    self.sd9:render()
+    self.sd10:render()
+    self.sd11:render()
+    self.sd12:render()
+    self.sd13:render()
+
+    self.bd1:render()
+    self.bd2:render()
+    self.bd3:render()
+    self.bd4:render()
+
+end
 
 function Map:collides(tile)
 
@@ -98,6 +168,7 @@ end
 function Map:update(dt)
 
     self.player:update(dt)
+    self:update_enemies(dt)
 
     self.camx = math.max(0, math.min(self.player.x - 432 / 2,
             math.min(self.mapWidth * self.tileWidth - 432, self.player.x)))
@@ -131,5 +202,6 @@ function Map:render()
     end
 
     self.player:render()
+    self:render_enemies()
 
 end

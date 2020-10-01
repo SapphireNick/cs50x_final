@@ -44,6 +44,8 @@ end
 
 -- loads all demons in the right places
 
+-- TODO #24 Add zombies
+
 function Map:load_enemies()
 
     self.sd1 = Demon('small', self, self.player, 25, 34)

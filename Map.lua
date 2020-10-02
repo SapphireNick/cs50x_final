@@ -44,8 +44,6 @@ end
 
 -- loads all demons in the right places
 
--- TODO #24 Add zombies
-
 function Map:load_enemies()
 
     self.sd1 = Demon('small', self, self.player, 25, 34)
@@ -66,6 +64,28 @@ function Map:load_enemies()
     self.bd2 = Demon('big', self, self.player, 14, 2)
     self.bd3 = Demon('big', self, self.player, 56, 28)
     self.bd4 = Demon('big', self, self.player, 87, 10)
+
+    self.sz1 = Demon('small_z', self, self.player, 6, 25)
+    self.sz2 = Demon('small_z', self, self.player, 12, 16)
+    self.sz3 = Demon('small_z', self, self.player, 15, 16)
+    self.sz4 = Demon('small_z', self, self.player, 35, 1)
+    self.sz5 = Demon('small_z', self, self.player, 41, 1)
+    self.sz6 = Demon('small_z', self, self.player, 38, 10)
+    self.sz7 = Demon('small_z', self, self.player, 33, 16)
+    self.sz8 = Demon('small_z', self, self.player, 37, 18)
+    self.sz9 = Demon('small_z', self, self.player, 39, 18)
+    self.sz10 = Demon('small_z', self, self.player, 44, 16)
+    self.sz11 = Demon('small_z', self, self.player, 61, 40)
+    self.sz12 = Demon('small_z', self, self.player, 62, 40)
+    self.sz13 = Demon('small_z', self, self.player, 69, 18)
+    self.sz14 = Demon('small_z', self, self.player, 96, 41)
+    self.sz15 = Demon('small_z', self, self.player, 96, 35)
+    self.sz16 = Demon('small_z', self, self.player, 80, 12)
+    self.sz17 = Demon('small_z', self, self.player, 83, 15)
+
+    self.bz1 = Demon('big_z', self, self.player, 82, 9)
+    self.bz2 = Demon('big_z', self, self.player, 87, 38)
+    self.bz3 = Demon('big_z', self, self.player, 2, 6)
 
 end
 
@@ -90,6 +110,29 @@ function Map:update_enemies(dt)
     self.bd3:update(dt)
     self.bd4:update(dt)
 
+
+    self.sz1:update(dt)
+    self.sz2:update(dt)
+    self.sz3:update(dt)
+    self.sz4:update(dt)
+    self.sz5:update(dt)
+    self.sz6:update(dt)
+    self.sz7:update(dt)
+    self.sz8:update(dt)
+    self.sz9:update(dt)
+    self.sz10:update(dt)
+    self.sz11:update(dt)
+    self.sz12:update(dt)
+    self.sz13:update(dt)
+    self.sz14:update(dt)
+    self.sz15:update(dt)
+    self.sz16:update(dt)
+    self.sz17:update(dt)
+
+    self.bz1:update(dt)
+    self.bz2:update(dt)
+    self.bz3:update(dt)
+
 end
 
 function Map:render_enemies()
@@ -112,6 +155,28 @@ function Map:render_enemies()
     self.bd2:render()
     self.bd3:render()
     self.bd4:render()
+
+    self.sz1:render(dt)
+    self.sz2:render(dt)
+    self.sz3:render(dt)
+    self.sz4:render(dt)
+    self.sz5:render(dt)
+    self.sz6:render(dt)
+    self.sz7:render(dt)
+    self.sz8:render(dt)
+    self.sz9:render(dt)
+    self.sz10:render(dt)
+    self.sz11:render(dt)
+    self.sz12:render(dt)
+    self.sz13:render(dt)
+    self.sz14:render(dt)
+    self.sz15:render(dt)
+    self.sz16:render(dt)
+    self.sz17:render(dt)
+
+    self.bz1:render(dt)
+    self.bz2:render(dt)
+    self.bz3:render(dt)
 
 end
 

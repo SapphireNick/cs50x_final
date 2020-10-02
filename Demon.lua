@@ -160,7 +160,7 @@ function Demon:init(type, map, player, posx, posy)
         self.currentFrame = self.animation:getCurrentFrame()
     elseif self.type == 'small_z' then
         self.animation = self.small_zombie_animations['idle']
-        self.animation = self.animation:getCurrentFrame()
+        self.currentFrame = self.animation:getCurrentFrame()
     end
 
     -- define behaviour table dependend on the type

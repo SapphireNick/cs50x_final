@@ -7,6 +7,8 @@ function Demon:init(type, map, player, posx, posy)
 
     self.type = type
 
+    self.bool = true
+
     -- associate self with map
 
     self.map = map
@@ -41,7 +43,7 @@ function Demon:init(type, map, player, posx, posy)
     self.small_yOffset = 12
     self.small_xOffset = 8
 
-    -- idle and walking fraes for big demon
+    -- idle, walking and attack frames for enemies
 
     self.big_idle_frames = {
         love.graphics.newImage('frames/big_demon_idle_anim_f0.png'),
@@ -57,7 +59,11 @@ function Demon:init(type, map, player, posx, posy)
         love.graphics.newImage('frames/big_demon_run_anim_f3.png')
     }
 
-    -- idle and walking frames for small demon
+    self.big_attack_frames = {
+        love.graphics.newImage('frames/big_demon_run_anim_f2.png'),
+        love.graphics.newImage('frames/big_demon_run_anim_f3.png'),
+        love.graphics.newImage('frames/big_demon_run_anim_f2.png')
+    }
 
     self.small_idle_frames = {
         love.graphics.newImage('frames/chort_idle_anim_f0.png'),
@@ -73,11 +79,23 @@ function Demon:init(type, map, player, posx, posy)
         love.graphics.newImage('frames/chort_run_anim_f3.png')
     }
 
+    self.small_attack_frames = {
+        love.graphics.newImage('frames/chort_idle_anim_f3.png'),
+        love.graphics.newImage('frames/chort_idle_anim_f1.png'),
+        love.graphics.newImage('frames/chort_idle_anim_f3.png')
+    }
+
     self.big_zombie_idle_frames = {
         love.graphics.newImage('frames/big_zombie_idle_anim_f0.png'),
         love.graphics.newImage('frames/big_zombie_idle_anim_f1.png'),
         love.graphics.newImage('frames/big_zombie_idle_anim_f2.png'),
         love.graphics.newImage('frames/big_zombie_idle_anim_f3.png')
+    }
+
+    self.big_zombie_attack_frames = {
+        love.graphics.newImage('frames/big_zombie_run_anim_f1.png'),
+        love.graphics.newImage('frames/big_zombie_run_anim_f3.png'),
+        love.graphics.newImage('frames/big_zombie_run_anim_f1.png')
     }
 
     self.big_zombie_run_frames = {
@@ -101,6 +119,12 @@ function Demon:init(type, map, player, posx, posy)
         love.graphics.newImage('frames/orc_warrior_run_anim_f3.png')
     }
 
+    self.small_zombie_attack_frames = {
+        love.graphics.newImage('frames/orc_warrior_run_anim_f1.png'),
+        love.graphics.newImage('frames/orc_warrior_idle_anim_f2.png'),
+        love.graphics.newImage('frames/orc_warrior_run_anim_f1.png')
+    }
+
     -- initialize animations for big demon
 
     self.big_animations = {
@@ -111,6 +135,10 @@ function Demon:init(type, map, player, posx, posy)
         ['walking'] = Animation ({
             frames = self.big_run_frames,
             interval = 0.2
+        }),
+        ['attack'] = Animation ({
+            frames = self.big_attack_frames,
+            interval = 0.75
         })
     }
 
@@ -124,6 +152,10 @@ function Demon:init(type, map, player, posx, posy)
         ['walking'] = Animation ({
             frames = self.small_run_frames,
             interval = 0.2
+        }),
+        ['attack'] = Animation ({
+            frames = self.small_attack_frames,
+            interval = 0.75
         })
     }
 
@@ -135,6 +167,10 @@ function Demon:init(type, map, player, posx, posy)
         ['walking'] = Animation ({
             frames = self.big_zombie_run_frames,
             interval = 0.2
+        }),
+        ['attack'] = Animation ({
+            frames = self.big_zombie_attack_frames,
+            interval = 0.75
         })
     }
 
@@ -146,6 +182,10 @@ function Demon:init(type, map, player, posx, posy)
         ['walking'] = Animation ({
             frames = self.small_zombie_run_frames,
             interval = 0.2
+        }),
+        ['attack'] = Animation ({
+            frames = self.small_zombie_attack_frames,
+            interval = 0.75
         })
     }
 
@@ -179,7 +219,11 @@ function Demon:init(type, map, player, posx, posy)
                     local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
                     if distance < 100 then
-                        if self.dx < 0 then
+                        if distance < 30 then
+                            self.state = 'attack'
+                            self.big_animations['attack']:restart()
+                            self.animation = self.big_animations['attack']
+                        elseif self.dx < 0 then
                             self.direction = 'left'
                         elseif self.dx > 0 then
                             self.direction = 'right'
@@ -208,7 +252,11 @@ function Demon:init(type, map, player, posx, posy)
                     local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
                     if distance < 100 then
-                        if self.dx < 0 then
+                        if distance < 30 then
+                            self.state = 'attack'
+                            self.big_animations['attack']:restart()
+                            self.animation = self.big_animations['attack']
+                        elseif self.dx < 0 then
                             self.direction = 'left'
                         elseif self.dx > 0 then
                             self.direction = 'right'
@@ -225,6 +273,30 @@ function Demon:init(type, map, player, posx, posy)
                     self:checkRightCollision()
                     self:checkTopCollision()
                     self:checkBottomCollision()
+
+                end,
+                ['attack'] = function(dt)
+
+                    self.dx = self.player.x - self.x
+                    self.dy = self.player.y - self.y
+
+                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+
+                    local currentFrame = self.animation:getCurrentFrame()
+
+                    if currentFrame == self.big_attack_frames[1] and self.bool == false then
+                        self.state = 'idle'
+                        self.big_animations['idle']:restart()
+                        self.animation = self.big_animations['idle']
+                        self.bool = true
+                    elseif currentFrame == self.big_attack_frames[2] and self.bool == true then
+                        if distance < 30 then
+                            self.player.current_health = self.player.current_health - 1
+                            self.bool = false
+                        else
+                            self.bool = false
+                        end
+                    end
 
                 end
         }
@@ -244,7 +316,11 @@ function Demon:init(type, map, player, posx, posy)
                     local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
                     if distance < 75 then
-                        if self.dx < 0 then
+                        if distance < 30 then
+                            self.state = 'attack'
+                            self.small_animations['attack']:restart()
+                            self.animation = self.small_animations['attack']
+                        elseif self.dx < 0 then
                             self.direction = 'left'
                         elseif self.dx > 0 then
                             self.direction = 'right'
@@ -273,7 +349,11 @@ function Demon:init(type, map, player, posx, posy)
                     local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
                     if distance < 75 then
-                        if self.dx < 0 then
+                        if distance < 30 then
+                            self.state = 'attack'
+                            self.small_animations['attack']:restart()
+                            self.animation = self.small_animations['attack']
+                        elseif self.dx < 0 then
                             self.direction = 'left'
                         elseif self.dx > 0 then
                             self.direction = 'right'
@@ -290,6 +370,30 @@ function Demon:init(type, map, player, posx, posy)
                     self:checkRightCollision()
                     self:checkTopCollision()
                     self:checkBottomCollision()
+
+                end,
+                ['attack'] = function(dt)
+
+                    self.dx = self.player.x - self.x
+                    self.dy = self.player.y - self.y
+
+                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+
+                    local currentFrame = self.animation:getCurrentFrame()
+
+                    if currentFrame == self.small_attack_frames[1] and self.bool == false then
+                        self.state = 'idle'
+                        self.small_animations['idle']:restart()
+                        self.animation = self.small_animations['idle']
+                        self.bool = true
+                    elseif currentFrame == self.small_attack_frames[2] and self.bool == true then
+                        if distance < 30 then
+                            self.player.current_health = self.player.current_health - 1
+                            self.bool = false
+                        else
+                            self.bool = false
+                        end
+                    end
 
                 end
         }
@@ -309,7 +413,11 @@ function Demon:init(type, map, player, posx, posy)
                     local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
                     if distance < 75 then
-                        if self.dx < 0 then
+                        if distance < 30 then
+                            self.state = 'attack'
+                            self.small_zombie_animations['attack']:restart()
+                            self.animation = self.small_zombie_animations['attack']
+                        elseif self.dx < 0 then
                             self.direction = 'left'
                         elseif self.dx > 0 then
                             self.direction = 'right'
@@ -338,7 +446,11 @@ function Demon:init(type, map, player, posx, posy)
                     local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
                     if distance < 75 then
-                        if self.dx < 0 then
+                        if distance < 30 then
+                            self.state = 'attack'
+                            self.small_zombie_animations['attack']:restart()
+                            self.animation = self.small_zombie_animations['attack']
+                        elseif self.dx < 0 then
                             self.direction = 'left'
                         elseif self.dx > 0 then
                             self.direction = 'right'
@@ -355,6 +467,30 @@ function Demon:init(type, map, player, posx, posy)
                     self:checkRightCollision()
                     self:checkTopCollision()
                     self:checkBottomCollision()
+
+                end,
+                ['attack'] = function(dt)
+
+                    self.dx = self.player.x - self.x
+                    self.dy = self.player.y - self.y
+
+                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+
+                    local currentFrame = self.animation:getCurrentFrame()
+
+                    if currentFrame == self.small_zombie_attack_frames[1] and self.bool == false then
+                        self.state = 'idle'
+                        self.small_zombie_animations['idle']:restart()
+                        self.animation = self.small_zombie_animations['idle']
+                        self.bool = true
+                    elseif currentFrame == self.small_zombie_attack_frames[2] and self.bool == true then
+                        if distance < 30 then
+                            self.player.current_health = self.player.current_health - 1
+                            self.bool = false
+                        else
+                            self.bool = false
+                        end
+                    end
 
                 end
         }
@@ -374,7 +510,11 @@ function Demon:init(type, map, player, posx, posy)
                     local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
                     if distance < 75 then
-                        if self.dx < 0 then
+                        if distance < 30 then
+                            self.state = 'attack'
+                            self.big_zombie_animations['attack']:restart()
+                            self.animation = self.big_zombie_animations['attack']
+                        elseif self.dx < 0 then
                             self.direction = 'left'
                         elseif self.dx > 0 then
                             self.direction = 'right'
@@ -403,7 +543,11 @@ function Demon:init(type, map, player, posx, posy)
                     local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
                     if distance < 75 then
-                        if self.dx < 0 then
+                        if distance < 30 then
+                            self.state = 'attack'
+                            self.big_zombie_animations['attack']:restart()
+                            self.animation = self.big_zombie_animations['attack']
+                        elseif self.dx < 0 then
                             self.direction = 'left'
                         elseif self.dx > 0 then
                             self.direction = 'right'
@@ -420,6 +564,30 @@ function Demon:init(type, map, player, posx, posy)
                     self:checkRightCollision()
                     self:checkTopCollision()
                     self:checkBottomCollision()
+
+                end,
+                ['attack'] = function(dt)
+
+                    self.dx = self.player.x - self.x
+                    self.dy = self.player.y - self.y
+
+                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+
+                    local currentFrame = self.animation:getCurrentFrame()
+
+                    if currentFrame == self.big_zombie_attack_frames[1] and self.bool == false then
+                        self.state = 'idle'
+                        self.big_zombie_animations['idle']:restart()
+                        self.animation = self.big_zombie_animations['idle']
+                        self.bool = true
+                    elseif currentFrame == self.big_zombie_attack_frames[2] and self.bool == true then
+                        if distance < 30 then
+                            self.player.current_health = self.player.current_health - 1
+                            self.bool = false
+                        else
+                            self.bool = false
+                        end
+                    end
 
                 end
         }

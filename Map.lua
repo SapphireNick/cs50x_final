@@ -268,7 +268,28 @@ function Map:render()
         end
     end
 
-    self.player:render()
-    self:render_enemies()
+    if self.player.current_health <= 0 then
+        love.graphics.clear(0, 0, 0, 1)
+        love.graphics.draw(self.player.idle_frames[3], self.camx + 432 / 2, self.camy + 243 / 2 - self.player.yOffset)
+        self.player.x = 0
+        self.player.y = 0
+        love.graphics.printf("You died! Try again? [y/n]",
+                             432 / 8 - 50,
+                             243 / 2 + 50,
+                             432, 'center')
+        if love.keyboard.isDown('y') then
+            self:load_enemies()
+            self.player.x = map.tileWidth * 38
+            self.player.y = map.tileHeight * 45
+            self.player.current_health = 5
+        elseif love.keyboard.isDown('n') then
+            love.event.quit()
+        end
+
+
+    else
+        self.player:render()
+        self:render_enemies()
+    end
 
 end

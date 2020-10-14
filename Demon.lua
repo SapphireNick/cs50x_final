@@ -9,6 +9,8 @@ function Demon:init(type, map, player, posx, posy)
 
     self.bool = true
 
+    self.distance = 0
+
     -- associate self with map
 
     self.map = map
@@ -20,8 +22,11 @@ function Demon:init(type, map, player, posx, posy)
     self.x = posx * self.map.tileWidth
     self.y = posy * self.map.tileHeight
 
-    self.big_health = 5
-    self.small_health = 3
+    if type == 'small' or type == 'small_z' then
+        self.current_health = 3
+    elseif type == 'big' or type == 'big_z' then
+        self.current_health = 5
+    end
 
     -- height and width for either small or big demon
     -- type argument will decide which demon to spawn
@@ -216,10 +221,10 @@ function Demon:init(type, map, player, posx, posy)
                     self.dx = self.player.x - self.x
                     self.dy = self.player.y - self.y
 
-                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+                    self.distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
-                    if distance < 100 then
-                        if distance < 30 then
+                    if self.distance < 100 then
+                        if self.distance < 30 then
                             self.state = 'attack'
                             self.big_animations['attack']:restart()
                             self.animation = self.big_animations['attack']
@@ -231,8 +236,8 @@ function Demon:init(type, map, player, posx, posy)
                         self.state = 'walking'
                         self.big_animations['walking']:restart()
                         self.animation = self.big_animations['walking']
-                        self.x = self.x + (self.dx / distance * ENEMY_SPEED_BIG * dt)
-                        self.y = self.y + (self.dy / distance * ENEMY_SPEED_BIG * dt)
+                        self.x = self.x + (self.dx / self.distance * ENEMY_SPEED_BIG * dt)
+                        self.y = self.y + (self.dy / self.distance * ENEMY_SPEED_BIG * dt)
                     end
 
                     self:checkLeftCollision()
@@ -249,10 +254,10 @@ function Demon:init(type, map, player, posx, posy)
                     self.dx = self.player.x - self.x
                     self.dy = self.player.y - self.y
 
-                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+                    self.distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
-                    if distance < 100 then
-                        if distance < 30 then
+                    if self.distance < 100 then
+                        if self.distance < 30 then
                             self.state = 'attack'
                             self.big_animations['attack']:restart()
                             self.animation = self.big_animations['attack']
@@ -261,8 +266,8 @@ function Demon:init(type, map, player, posx, posy)
                         elseif self.dx > 0 then
                             self.direction = 'right'
                         end
-                        self.x = self.x + (self.dx / distance * ENEMY_SPEED_BIG * dt)
-                        self.y = self.y + (self.dy / distance * ENEMY_SPEED_BIG * dt)
+                        self.x = self.x + (self.dx / self.distance * ENEMY_SPEED_BIG * dt)
+                        self.y = self.y + (self.dy / self.distance * ENEMY_SPEED_BIG * dt)
                     else
                         self.state = 'idle'
                         self.big_animations['idle']:restart()
@@ -280,7 +285,7 @@ function Demon:init(type, map, player, posx, posy)
                     self.dx = self.player.x - self.x
                     self.dy = self.player.y - self.y
 
-                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+                    self.distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
                     local currentFrame = self.animation:getCurrentFrame()
 
@@ -290,7 +295,7 @@ function Demon:init(type, map, player, posx, posy)
                         self.animation = self.big_animations['idle']
                         self.bool = true
                     elseif currentFrame == self.big_attack_frames[2] and self.bool == true then
-                        if distance < 30 then
+                        if self.distance < 30 then
                             self.player.current_health = self.player.current_health - 1
                             self.bool = false
                         else
@@ -313,10 +318,10 @@ function Demon:init(type, map, player, posx, posy)
                     self.dx = self.player.x - self.x
                     self.dy = self.player.y - self.y
 
-                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+                    self.distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
-                    if distance < 75 then
-                        if distance < 30 then
+                    if self.distance < 75 then
+                        if self.distance < 30 then
                             self.state = 'attack'
                             self.small_animations['attack']:restart()
                             self.animation = self.small_animations['attack']
@@ -328,8 +333,8 @@ function Demon:init(type, map, player, posx, posy)
                         self.state = 'walking'
                         self.small_animations['walking']:restart()
                         self.animation = self.small_animations['walking']
-                        self.x = self.x + (self.dx / distance * ENEMY_SPEED_SMALL * dt)
-                        self.y = self.y + (self.dy / distance * ENEMY_SPEED_SMALL * dt)
+                        self.x = self.x + (self.dx / self.distance * ENEMY_SPEED_SMALL * dt)
+                        self.y = self.y + (self.dy / self.distance * ENEMY_SPEED_SMALL * dt)
                     end
 
                     self:checkLeftCollision()
@@ -346,10 +351,10 @@ function Demon:init(type, map, player, posx, posy)
                     self.dx = self.player.x - self.x
                     self.dy = self.player.y - self.y
 
-                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+                    self.distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
-                    if distance < 75 then
-                        if distance < 30 then
+                    if self.distance < 75 then
+                        if self.distance < 30 then
                             self.state = 'attack'
                             self.small_animations['attack']:restart()
                             self.animation = self.small_animations['attack']
@@ -358,8 +363,8 @@ function Demon:init(type, map, player, posx, posy)
                         elseif self.dx > 0 then
                             self.direction = 'right'
                         end
-                        self.x = self.x + (self.dx / distance * ENEMY_SPEED_SMALL * dt)
-                        self.y = self.y + (self.dy / distance * ENEMY_SPEED_SMALL * dt)
+                        self.x = self.x + (self.dx / self.distance * ENEMY_SPEED_SMALL * dt)
+                        self.y = self.y + (self.dy / self.distance * ENEMY_SPEED_SMALL * dt)
                     else
                         self.state = 'idle'
                         self.small_animations['idle']:restart()
@@ -377,7 +382,7 @@ function Demon:init(type, map, player, posx, posy)
                     self.dx = self.player.x - self.x
                     self.dy = self.player.y - self.y
 
-                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+                    self.distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
                     local currentFrame = self.animation:getCurrentFrame()
 
@@ -387,7 +392,7 @@ function Demon:init(type, map, player, posx, posy)
                         self.animation = self.small_animations['idle']
                         self.bool = true
                     elseif currentFrame == self.small_attack_frames[2] and self.bool == true then
-                        if distance < 30 then
+                        if self.distance < 30 then
                             self.player.current_health = self.player.current_health - 1
                             self.bool = false
                         else
@@ -410,10 +415,10 @@ function Demon:init(type, map, player, posx, posy)
                     self.dx = self.player.x - self.x
                     self.dy = self.player.y - self.y
 
-                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+                    self.distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
-                    if distance < 75 then
-                        if distance < 30 then
+                    if self.distance < 75 then
+                        if self.distance < 30 then
                             self.state = 'attack'
                             self.small_zombie_animations['attack']:restart()
                             self.animation = self.small_zombie_animations['attack']
@@ -425,8 +430,8 @@ function Demon:init(type, map, player, posx, posy)
                         self.state = 'walking'
                         self.small_zombie_animations['walking']:restart()
                         self.animation = self.small_zombie_animations['walking']
-                        self.x = self.x + (self.dx / distance * ENEMY_SPEED_SMALL * dt)
-                        self.y = self.y + (self.dy / distance * ENEMY_SPEED_SMALL * dt)
+                        self.x = self.x + (self.dx / self.distance * ENEMY_SPEED_SMALL * dt)
+                        self.y = self.y + (self.dy / self.distance * ENEMY_SPEED_SMALL * dt)
                     end
 
                     self:checkLeftCollision()
@@ -443,10 +448,10 @@ function Demon:init(type, map, player, posx, posy)
                     self.dx = self.player.x - self.x
                     self.dy = self.player.y - self.y
 
-                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+                    self.distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
-                    if distance < 75 then
-                        if distance < 30 then
+                    if self.distance < 75 then
+                        if self.distance < 30 then
                             self.state = 'attack'
                             self.small_zombie_animations['attack']:restart()
                             self.animation = self.small_zombie_animations['attack']
@@ -455,8 +460,8 @@ function Demon:init(type, map, player, posx, posy)
                         elseif self.dx > 0 then
                             self.direction = 'right'
                         end
-                        self.x = self.x + (self.dx / distance * ENEMY_SPEED_SMALL * dt)
-                        self.y = self.y + (self.dy / distance * ENEMY_SPEED_SMALL * dt)
+                        self.x = self.x + (self.dx / self.distance * ENEMY_SPEED_SMALL * dt)
+                        self.y = self.y + (self.dy / self.distance * ENEMY_SPEED_SMALL * dt)
                     else
                         self.state = 'idle'
                         self.small_zombie_animations['idle']:restart()
@@ -474,7 +479,7 @@ function Demon:init(type, map, player, posx, posy)
                     self.dx = self.player.x - self.x
                     self.dy = self.player.y - self.y
 
-                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+                    self.distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
                     local currentFrame = self.animation:getCurrentFrame()
 
@@ -484,7 +489,7 @@ function Demon:init(type, map, player, posx, posy)
                         self.animation = self.small_zombie_animations['idle']
                         self.bool = true
                     elseif currentFrame == self.small_zombie_attack_frames[2] and self.bool == true then
-                        if distance < 30 then
+                        if self.distance < 30 then
                             self.player.current_health = self.player.current_health - 1
                             self.bool = false
                         else
@@ -507,10 +512,10 @@ function Demon:init(type, map, player, posx, posy)
                     self.dx = self.player.x - self.x
                     self.dy = self.player.y - self.y
 
-                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+                    self.distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
-                    if distance < 75 then
-                        if distance < 30 then
+                    if self.distance < 75 then
+                        if self.distance < 30 then
                             self.state = 'attack'
                             self.big_zombie_animations['attack']:restart()
                             self.animation = self.big_zombie_animations['attack']
@@ -522,8 +527,8 @@ function Demon:init(type, map, player, posx, posy)
                         self.state = 'walking'
                         self.big_zombie_animations['walking']:restart()
                         self.animation = self.big_zombie_animations['walking']
-                        self.x = self.x + (self.dx / distance * ENEMY_SPEED_SMALL * dt)
-                        self.y = self.y + (self.dy / distance * ENEMY_SPEED_SMALL * dt)
+                        self.x = self.x + (self.dx / self.distance * ENEMY_SPEED_SMALL * dt)
+                        self.y = self.y + (self.dy / self.distance * ENEMY_SPEED_SMALL * dt)
                     end
 
                     self:checkLeftCollision()
@@ -540,10 +545,10 @@ function Demon:init(type, map, player, posx, posy)
                     self.dx = self.player.x - self.x
                     self.dy = self.player.y - self.y
 
-                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+                    self.distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
-                    if distance < 75 then
-                        if distance < 30 then
+                    if self.distance < 75 then
+                        if self.distance < 30 then
                             self.state = 'attack'
                             self.big_zombie_animations['attack']:restart()
                             self.animation = self.big_zombie_animations['attack']
@@ -552,8 +557,8 @@ function Demon:init(type, map, player, posx, posy)
                         elseif self.dx > 0 then
                             self.direction = 'right'
                         end
-                        self.x = self.x + (self.dx / distance * ENEMY_SPEED_SMALL * dt)
-                        self.y = self.y + (self.dy / distance * ENEMY_SPEED_SMALL * dt)
+                        self.x = self.x + (self.dx / self.distance * ENEMY_SPEED_SMALL * dt)
+                        self.y = self.y + (self.dy / self.distance * ENEMY_SPEED_SMALL * dt)
                     else
                         self.state = 'idle'
                         self.big_zombie_animations['idle']:restart()
@@ -571,7 +576,7 @@ function Demon:init(type, map, player, posx, posy)
                     self.dx = self.player.x - self.x
                     self.dy = self.player.y - self.y
 
-                    local distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+                    self.distance = math.sqrt(self.dx * self.dx + self.dy * self.dy)
 
                     local currentFrame = self.animation:getCurrentFrame()
 
@@ -581,7 +586,7 @@ function Demon:init(type, map, player, posx, posy)
                         self.animation = self.big_zombie_animations['idle']
                         self.bool = true
                     elseif currentFrame == self.big_zombie_attack_frames[2] and self.bool == true then
-                        if distance < 30 then
+                        if self.distance < 30 then
                             self.player.current_health = self.player.current_health - 1
                             self.bool = false
                         else
@@ -650,12 +655,25 @@ function Demon:checkBottomCollision()
     end
 end
 
-
 function Demon:update(dt)
 
     self.behaviours[self.state](dt)
     self.animation:update(dt)
     self.currentFrame = self.animation:getCurrentFrame()
+
+    -- TODO: WHY DOES THIS NOT WORK?????
+
+    if self.player.is_attacking == true and self.distance <= 20 then
+        self.current_health = self.current_health - 1
+        self.player.is_attacking = false
+    elseif self.player.is_attacking == true and self.distance > 20 then
+        self.player.is_attacking = false
+    end
+
+    if self.current_health == 0 or self.player.current_health == 0 then
+        self.x = 0
+        self.y = 0
+    end
 
 end
 

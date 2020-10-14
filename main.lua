@@ -40,6 +40,9 @@ function love.load()
 
     map:load_enemies()
 
+    love.keyboard.keysPressed = {}
+    love.keyboard.keysReleased = {}
+
 end
 
 function love.resize(w, h)
@@ -50,11 +53,36 @@ function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
     end
+
+    love.keyboard.keysPressed[key] = true
+end
+
+function love.keyboard.wasPressed(key)
+    if (love.keyboard.keysPressed[key]) then
+        return true
+    else
+        return false
+    end
+end
+
+function love.keyboard.wasReleased(key)
+    if (love.keyboard.keysReleased[key]) then
+        return true
+    else
+        return false
+    end
+end
+
+function love.keyreleased(key)
+    love.keyboard.keysReleased[key] = true
 end
 
 function love.update(dt)
 
     map:update(dt)
+
+    love.keyboard.keysPressed = {}
+    love.keyboard.keysReleased = {}
 
 end
 

@@ -21,6 +21,10 @@ function Player:init(map)
 
     self.xOffset = 8
     self.yOffset = 14
+    self.weapon_offset = 0
+    self.weapon_tilt = 0.9
+
+    self.is_attacking = false
 
     -- player position in level
 
@@ -32,6 +36,8 @@ function Player:init(map)
 
     self.full_heart_sprite = love.graphics.newImage('frames/ui_heart_full.png')
     self.empty_heart_sprite = love.graphics.newImage('frames/ui_heart_empty.png')
+
+    self.weapon_sprite = love.graphics.newImage('frames/weapon_red_gem_sword.png')
 
     self.idle_frames = {
         love.graphics.newImage('frames/knight_m_idle_anim_f0.png'),
@@ -66,12 +72,20 @@ function Player:init(map)
 
     self.behaviours = {
         ['idle'] = function(dt)
+
+            self.weapon_offset = self:get_weapon_offset()
+
+            if love.keyboard.wasPressed('space') then
+                self.is_attacking = true
+            end
+
             if love.keyboard.isDown('a') then
                 self.direction = 'left'
                 self.state = 'walking'
                 self.dx = -WALKING_SPEED
                 self.animations['walking']:restart()
                 self.animation = self.animations['walking']
+                self.weapon_offset = 0
             end
             if love.keyboard.isDown('d') then
                 self.direction = 'right'
@@ -79,6 +93,7 @@ function Player:init(map)
                 self.dx = WALKING_SPEED
                 self.animations['walking']:restart()
                 self.animation = self.animations['walking']
+                self.weapon_offset = 0
             end
             if not love.keyboard.isDown('a') and not love.keyboard.isDown('d') then
                 self.dx = 0
@@ -88,12 +103,14 @@ function Player:init(map)
                 self.dy = -WALKING_SPEED
                 self.animations['walking']:restart()
                 self.animation = self.animations['walking']
+                self.weapon_offset = 0
             end
             if love.keyboard.isDown('s') then
                 self.state = 'walking'
                 self.dy = WALKING_SPEED
                 self.animations['walking']:restart()
                 self.animation = self.animations['walking']
+                self.weapon_offset = 0
             end
             if not love.keyboard.isDown('w') and not love.keyboard.isDown('s') then
                 self.dy = 0
@@ -105,6 +122,11 @@ function Player:init(map)
             end
         end,
         ['walking'] = function(dt)
+
+            if love.keyboard.wasPressed('space') then
+                self.is_attacking = true
+            end
+
             if love.keyboard.isDown('a') then
                 self.direction = 'left'
                 self.dx = -WALKING_SPEED
@@ -193,6 +215,14 @@ function Player:checkBottomCollision()
     end
 end
 
+function Player:get_weapon_offset()
+    for i = 1, #self.idle_frames do
+        if self.animation:getCurrentFrame() == self.idle_frames[i] then
+            return i
+        end
+    end
+end
+
 function Player:update(dt)
 
     self.behaviours[self.state](dt)
@@ -229,10 +259,11 @@ end
 function Player:render()
 
     local scaleX
+    local weapon_tilt
 
     if self.direction == 'right' then
         scaleX = 1
-    else
+    elseif self.direction == 'left' then
         scaleX = -1
     end
 
@@ -245,6 +276,9 @@ function Player:render()
     end
 
     love.graphics.draw(self.currentFrame, math.floor(self.x + self.xOffset),
-            math.floor(self.y + self.yOffset), 0, scaleX, 1, self.xOffset, self.yOffset)
+                       math.floor(self.y + self.yOffset), 0, scaleX, 1, self.xOffset, self.yOffset)
+
+    love.graphics.draw(self.weapon_sprite, math.floor(self.x + self.xOffset),
+                       math.floor(self.y + self.yOffset + self.weapon_offset + 12), scaleX * self.weapon_tilt, scaleX * 0.6, 0.6, 10, 21)
 
 end

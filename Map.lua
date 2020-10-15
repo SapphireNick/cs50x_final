@@ -236,6 +236,7 @@ function Map:update(dt)
 
     self.player:update(dt)
     self:update_enemies(dt)
+    self.player.is_attacking = false
 
     self.camx = math.max(0, math.min(self.player.x - 432 / 2,
             math.min(self.mapWidth * self.tileWidth - 432, self.player.x)))

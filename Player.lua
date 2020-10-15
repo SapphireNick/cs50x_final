@@ -11,6 +11,12 @@ function Player:init(map)
     self.max_health = 5
     self.current_health = 5
 
+    self.sounds = {
+        ['pickup'] = love.audio.newSource('sounds/pickup.wav', 'static'),
+        ['hit'] = love.audio.newSource('sounds/hit.wav', 'static'),
+        ['swing'] = love.audio.newSource('sounds/swing.wav', 'static')
+    }
+
     -- variables for velocity
 
     self.dx = 0
@@ -77,6 +83,7 @@ function Player:init(map)
 
             if love.keyboard.wasPressed('space') then
                 self.is_attacking = true
+                self.sounds['swing']:play()
             end
 
             if love.keyboard.isDown('a') then
@@ -125,6 +132,7 @@ function Player:init(map)
 
             if love.keyboard.wasPressed('space') then
                 self.is_attacking = true
+                self.sounds['swing']:play()
             end
 
             if love.keyboard.isDown('a') then
@@ -238,6 +246,7 @@ function Player:update(dt)
         if self.map:check_pickups(self.map:tileAt(2, self.x, self.y)) then
             self.map:setTile(2, self.map:tileAt(2, self.x, self.y).x, self.map:tileAt(2, self.x, self.y).y, 0)
             self.current_health = self.current_health + 1
+            self.sounds['pickup']:play()
         end
     end
 
@@ -248,6 +257,7 @@ function Player:update(dt)
         if self.map:check_spike(self.map:tileAt(2, self.x + self.xOffset, self.y + self.yOffset)) then
             self.timer = 0
             self.current_health = self.current_health - 1
+            self.sounds['hit']:play()
         end
     end
 

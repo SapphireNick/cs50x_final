@@ -27,7 +27,11 @@ love.graphics.setDefaultFilter('nearest', 'nearest')
 
 map = Map()
 
+gamestate = 'start'
+
 function love.load()
+
+    love.graphics.setFont(love.graphics.newFont('fonts/font.ttf'), 32)
     
     -- set up virtual screen resolution
     push:setupScreen(VIRUTAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -79,10 +83,12 @@ end
 
 function love.update(dt)
 
-    map:update(dt)
+    if gamestate == 'play' then
+        map:update(dt)
 
-    love.keyboard.keysPressed = {}
-    love.keyboard.keysReleased = {}
+        love.keyboard.keysPressed = {}
+        love.keyboard.keysReleased = {}
+    end
 
 end
 
@@ -92,8 +98,21 @@ function love.draw()
 
     love.graphics.clear(0, 0, 0, 1)
 
-    love.graphics.translate(math.floor(-map.camx + 0.5), math.floor(-map.camy + 0.5))
-    map:render()
+    if gamestate == 'start' then
+        love.graphics.clear(0, 0, 0, 1)
+        love.graphics.draw(love.graphics.newImage('background/Background.png'))
+        love.graphics.printf("Welcome to Dungeon Crawler 50!", VIRUTAL_WIDTH / 4,
+                VIRTUAL_HEIGHT / 2 - 20, VIRUTAL_WIDTH / 2, 'center')
+        love.graphics.printf("Press enter to start!", VIRUTAL_WIDTH / 4,
+                VIRTUAL_HEIGHT / 2, VIRUTAL_WIDTH / 2, 'center')
+        if love.keyboard.wasPressed('return') then
+            gamestate = 'play'
+            map.select:play()
+        end
+    elseif gamestate == 'play' then
+        love.graphics.translate(math.floor(-map.camx + 0.5), math.floor(-map.camy + 0.5))
+        map:render()
+    end
 
     push:apply('end')
 

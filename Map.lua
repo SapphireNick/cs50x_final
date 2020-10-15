@@ -23,6 +23,12 @@ function Map:init()
 
     self.player = Player(self)
 
+    self.select = love.audio.newSource('sounds/select.wav', 'static')
+
+    self.music = love.audio.newSource('sounds/soundtrack.wav', 'static')
+    self.music:setLooping(true)
+    self.music:play()
+
 end
 
 function Map:tileAt(layer, x, y)
@@ -234,15 +240,15 @@ end
 
 function Map:update(dt)
 
-    self.player:update(dt)
-    self:update_enemies(dt)
-    self.player.is_attacking = false
+        self.player:update(dt)
+        self:update_enemies(dt)
+        self.player.is_attacking = false
 
-    self.camx = math.max(0, math.min(self.player.x - 432 / 2,
-            math.min(self.mapWidth * self.tileWidth - 432, self.player.x)))
+        self.camx = math.max(0, math.min(self.player.x - 432 / 2,
+                math.min(self.mapWidth * self.tileWidth - 432, self.player.x)))
 
-    self.camy = math.max(0, math.min(self.player.y - 243 / 2 + self.player.height,
-            math.min(self.mapHeight * self.tileHeight - 243, self.player.y)))
+        self.camy = math.max(0, math.min(self.player.y - 243 / 2 + self.player.height,
+                math.min(self.mapHeight * self.tileHeight - 243, self.player.y)))
 
 end
 
@@ -283,7 +289,9 @@ function Map:render()
             self.player.x = map.tileWidth * 38
             self.player.y = map.tileHeight * 45
             self.player.current_health = 5
+            self.select:play()
         elseif love.keyboard.isDown('n') then
+            self.select:play()
             love.event.quit()
         end
 

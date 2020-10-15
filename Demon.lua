@@ -9,7 +9,16 @@ function Demon:init(type, map, player, posx, posy)
 
     self.bool = true
 
+    self.play_death_sound = true
+
     self.distance = 0
+
+    self.sounds = {
+        ['bite'] = love.audio.newSource('sounds/bite.wav', 'static'),
+        ['stomp'] = love.audio.newSource('sounds/stomp.wav', 'static'),
+        ['player_hit'] = love.audio.newSource('sounds/hit.wav', 'static'),
+        ['death'] = love.audio.newSource('sounds/demon_death.wav', 'static')
+    }
 
     -- associate self with map
 
@@ -295,9 +304,11 @@ function Demon:init(type, map, player, posx, posy)
                         self.animation = self.big_animations['idle']
                         self.bool = true
                     elseif currentFrame == self.big_attack_frames[2] and self.bool == true then
+                        self.sounds['bite']:play()
                         if self.distance < 30 then
                             self.player.current_health = self.player.current_health - 1
                             self.bool = false
+                            self.sounds['player_hit']:play()
                         else
                             self.bool = false
                         end
@@ -392,9 +403,11 @@ function Demon:init(type, map, player, posx, posy)
                         self.animation = self.small_animations['idle']
                         self.bool = true
                     elseif currentFrame == self.small_attack_frames[2] and self.bool == true then
+                        self.sounds['bite']:play()
                         if self.distance < 30 then
                             self.player.current_health = self.player.current_health - 1
                             self.bool = false
+                            self.sounds['player_hit']:play()
                         else
                             self.bool = false
                         end
@@ -489,9 +502,11 @@ function Demon:init(type, map, player, posx, posy)
                         self.animation = self.small_zombie_animations['idle']
                         self.bool = true
                     elseif currentFrame == self.small_zombie_attack_frames[2] and self.bool == true then
+                        self.sounds['stomp']:play()
                         if self.distance < 30 then
                             self.player.current_health = self.player.current_health - 1
                             self.bool = false
+                            self.sounds['player_hit']:play()
                         else
                             self.bool = false
                         end
@@ -586,9 +601,11 @@ function Demon:init(type, map, player, posx, posy)
                         self.animation = self.big_zombie_animations['idle']
                         self.bool = true
                     elseif currentFrame == self.big_zombie_attack_frames[2] and self.bool == true then
+                        self.sounds['stomp']:play()
                         if self.distance < 30 then
                             self.player.current_health = self.player.current_health - 1
                             self.bool = false
+                            self.sounds['player_hit']:play()
                         else
                             self.bool = false
                         end
@@ -661,6 +678,16 @@ function Demon:update(dt)
     self.animation:update(dt)
     self.currentFrame = self.animation:getCurrentFrame()
 
+    if self.player.current_health <= 0 then
+        self.sounds['bite']:setVolume(0)
+        self.sounds['stomp']:setVolume(0)
+        self.sounds['player_hit']:setVolume(0)
+    else
+        self.sounds['bite']:setVolume(1)
+        self.sounds['stomp']:setVolume(1)
+        self.sounds['player_hit']:setVolume(1)
+    end
+
     if self.player.is_attacking == true and self.distance <= 40 then
         self.current_health = self.current_health - 1
     end
@@ -668,6 +695,10 @@ function Demon:update(dt)
     if self.current_health == 0 or self.player.current_health == 0 then
         self.x = -40
         self.y = -40
+        if self.play_death_sound == true then
+            self.sounds['death']:play()
+            self.play_death_sound = false
+        end
     end
 
 end

@@ -661,18 +661,13 @@ function Demon:update(dt)
     self.animation:update(dt)
     self.currentFrame = self.animation:getCurrentFrame()
 
-    -- TODO: WHY DOES THIS NOT WORK?????
-
-    if self.player.is_attacking == true and self.distance <= 20 then
+    if self.player.is_attacking == true and self.distance <= 40 then
         self.current_health = self.current_health - 1
-        self.player.is_attacking = false
-    elseif self.player.is_attacking == true and self.distance > 20 then
-        self.player.is_attacking = false
     end
 
     if self.current_health == 0 or self.player.current_health == 0 then
-        self.x = 0
-        self.y = 0
+        self.x = -40
+        self.y = -40
     end
 
 end

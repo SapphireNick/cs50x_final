@@ -692,7 +692,15 @@ function Demon:update(dt)
         self.current_health = self.current_health - 1
     end
 
-    if self.current_health == 0 or self.player.current_health == 0 then
+    if self.current_health == 0 then
+        self.x = -40
+        self.y = -40
+        -- to keep death sound from continuously looping
+        if self.play_death_sound == true then
+            self.sounds['death']:play()
+            self.play_death_sound = false
+        end
+    elseif self.player.current_health == 0 then
         self.x = -40
         self.y = -40
         if self.play_death_sound == true then

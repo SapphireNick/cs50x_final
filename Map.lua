@@ -18,6 +18,8 @@ function Map:init()
         self.map.layers[2].data
     }
 
+    self.enemies = {}
+
     self.camx = 0
     self.camy = -3
 
@@ -53,49 +55,110 @@ end
 function Map:load_enemies()
 
     self.sd1 = Demon('small', self, self.player, 25, 34)
+    table.insert(self.enemies, self.sd1)
     self.sd2 = Demon('small', self, self.player, 25, 26)
+    table.insert(self.enemies, self.sd2)
     self.sd3 = Demon('small', self, self.player, 2, 26)
+    table.insert(self.enemies, self.sd3)
     self.sd4 = Demon('small', self, self.player, 51, 25)
+    table.insert(self.enemies, self.sd4)
     self.sd5 = Demon('small', self, self.player, 59, 2)
+    table.insert(self.enemies, self.sd5)
     self.sd6 = Demon('small', self, self.player, 59, 30)
+    table.insert(self.enemies, self.sd6)
     self.sd7 = Demon('small', self, self.player, 93, 33)
+    table.insert(self.enemies, self.sd7)
     self.sd8 = Demon('small', self, self.player, 51, 47)
+    table.insert(self.enemies, self.sd8)
     self.sd9 = Demon('small', self, self.player, 59, 38)
+    table.insert(self.enemies, self.sd9)
     self.sd10 = Demon('small', self, self.player, 64, 38)
+    table.insert(self.enemies, self.sd10)
     self.sd11 = Demon('small', self, self.player, 94, 47)
+    table.insert(self.enemies, self.sd11)
     self.sd12 = Demon('small', self, self.player, 87, 15)
+    table.insert(self.enemies, self.sd12)
     self.sd13 = Demon('small', self, self.player, 90, 13)
+    table.insert(self.enemies, self.sd13)
 
     self.bd1 = Demon('big', self, self.player, 6, 43)
+    table.insert(self.enemies, self.bd1)
     self.bd2 = Demon('big', self, self.player, 14, 2)
+    table.insert(self.enemies, self.bd2)
     self.bd3 = Demon('big', self, self.player, 56, 28)
+    table.insert(self.enemies, self.bd3)
     self.bd4 = Demon('big', self, self.player, 87, 10)
+    table.insert(self.enemies, self.bd4)
 
     self.sz1 = Demon('small_z', self, self.player, 6, 25)
+    table.insert(self.enemies, self.sz1)
     self.sz2 = Demon('small_z', self, self.player, 12, 16)
+    table.insert(self.enemies, self.sz2)
     self.sz3 = Demon('small_z', self, self.player, 15, 16)
+    table.insert(self.enemies, self.sz3)
     self.sz4 = Demon('small_z', self, self.player, 35, 1)
+    table.insert(self.enemies, self.sz4)
     self.sz5 = Demon('small_z', self, self.player, 41, 1)
+    table.insert(self.enemies, self.sz5)
     self.sz6 = Demon('small_z', self, self.player, 38, 10)
+    table.insert(self.enemies, self.sz6)
     self.sz7 = Demon('small_z', self, self.player, 33, 16)
+    table.insert(self.enemies, self.sz7)
     self.sz8 = Demon('small_z', self, self.player, 37, 18)
+    table.insert(self.enemies, self.sz8)
     self.sz9 = Demon('small_z', self, self.player, 39, 18)
+    table.insert(self.enemies, self.sz9)
     self.sz10 = Demon('small_z', self, self.player, 44, 16)
+    table.insert(self.enemies, self.sz10)
     self.sz11 = Demon('small_z', self, self.player, 61, 40)
+    table.insert(self.enemies, self.sz11)
     self.sz12 = Demon('small_z', self, self.player, 62, 40)
+    table.insert(self.enemies, self.sz12)
     self.sz13 = Demon('small_z', self, self.player, 69, 18)
+    table.insert(self.enemies, self.sz13)
     self.sz14 = Demon('small_z', self, self.player, 96, 41)
+    table.insert(self.enemies, self.sz14)
     self.sz15 = Demon('small_z', self, self.player, 96, 35)
+    table.insert(self.enemies, self.sz15)
     self.sz16 = Demon('small_z', self, self.player, 80, 12)
+    table.insert(self.enemies, self.sz16)
     self.sz17 = Demon('small_z', self, self.player, 83, 15)
+    table.insert(self.enemies, self.sz17)
 
     self.bz1 = Demon('big_z', self, self.player, 82, 9)
+    table.insert(self.enemies, self.bz1)
     self.bz2 = Demon('big_z', self, self.player, 87, 38)
+    table.insert(self.enemies, self.bz2)
     self.bz3 = Demon('big_z', self, self.player, 2, 6)
+    table.insert(self.enemies, self.bz3)
+
+end
+
+function Map:check_for_win()
+    
+    local count = 0
+
+    for _, enemies in ipairs(self.enemies) do
+        if enemies.current_health == 0 then
+            count = count + 1
+        end
+    end
+
+    if count == #self.enemies then
+        return true
+    else
+        return false
+    end
 
 end
 
 function Map:update_enemies(dt)
+
+    -- for some reason this does not work
+    -- for _, enemies in ipairs(self.enemies) do
+    --      enemies:update(dt)
+    -- end
+    -- everything updates way too fast
 
     self.sd1:update(dt)
     self.sd2:update(dt)
@@ -142,48 +205,9 @@ function Map:update_enemies(dt)
 end
 
 function Map:render_enemies()
-
-    self.sd1:render()
-    self.sd2:render()
-    self.sd3:render()
-    self.sd4:render()
-    self.sd5:render()
-    self.sd6:render()
-    self.sd7:render()
-    self.sd8:render()
-    self.sd9:render()
-    self.sd10:render()
-    self.sd11:render()
-    self.sd12:render()
-    self.sd13:render()
-
-    self.bd1:render()
-    self.bd2:render()
-    self.bd3:render()
-    self.bd4:render()
-
-    self.sz1:render(dt)
-    self.sz2:render(dt)
-    self.sz3:render(dt)
-    self.sz4:render(dt)
-    self.sz5:render(dt)
-    self.sz6:render(dt)
-    self.sz7:render(dt)
-    self.sz8:render(dt)
-    self.sz9:render(dt)
-    self.sz10:render(dt)
-    self.sz11:render(dt)
-    self.sz12:render(dt)
-    self.sz13:render(dt)
-    self.sz14:render(dt)
-    self.sz15:render(dt)
-    self.sz16:render(dt)
-    self.sz17:render(dt)
-
-    self.bz1:render(dt)
-    self.bz2:render(dt)
-    self.bz3:render(dt)
-
+    for _, enemies in ipairs(self.enemies) do
+        enemies:render()
+    end
 end
 
 function Map:collides(tile)
@@ -294,8 +318,25 @@ function Map:render()
             self.select:play()
             love.event.quit()
         end
-
-
+    elseif self:check_for_win() == true then
+        love.graphics.clear(0, 0, 0, 1)
+        self.player.x = 0
+        self.player.y = 0
+        love.graphics.draw(love.graphics.newImage('background/Background.png'))
+        love.graphics.printf("You did it! You killed every Monster!", VIRUTAL_WIDTH / 4,
+                VIRTUAL_HEIGHT / 2 - 20, VIRUTAL_WIDTH / 2, 'center')
+        love.graphics.printf("Dou you want to restart this adventure? [y/n]", VIRUTAL_WIDTH / 4,
+                VIRTUAL_HEIGHT / 2, VIRUTAL_WIDTH / 2, 'center')
+        if love.keyboard.isDown('y') then
+            self:load_enemies()
+            self.player.x = map.tileWidth * 38
+            self.player.y = map.tileHeight * 45
+            self.player.current_health = 5
+            self.select:play()
+        elseif love.keyboard.isDown('n') then
+            self.select:play()
+            love.event.quit()
+        end
     else
         self.player:render()
         self:render_enemies()
